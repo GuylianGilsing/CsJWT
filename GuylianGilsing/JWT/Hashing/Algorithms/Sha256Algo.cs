@@ -20,6 +20,9 @@ namespace GuylianGilsing.JWT.Hashing.Algorithms
         {
             SHA256 sha256Algo = SHA256.Create();
 
+            // Register the alg claim with the given token
+            a_token.header.RegisterClaim("alg", "SHA256");
+
             // Construct the header and payload parts of the token
             string partialToken = $"{ a_token.header.ToString() }.{ a_token.payload.ToString() }";
 
@@ -37,9 +40,6 @@ namespace GuylianGilsing.JWT.Hashing.Algorithms
             // Update the signature of the given token object
             string signature = stringBuilder.ToString();
             a_token.signature = signature;
-
-            // Register the alg claim with the given token
-            a_token.header.RegisterClaim("alg", "SHA256");
 
             return a_token;
         }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 
 using GuylianGilsing.JWT.Tokens;
+using GuylianGilsing.JWT.Hashing;
+using GuylianGilsing.JWT.Hashing.Algorithms;
 
 namespace CsJWT
 {
@@ -9,7 +11,16 @@ namespace CsJWT
     {
         static void Main(string[] args)
         {
-            Token token = new Token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+            TokenSigner signer = new TokenSigner();
+
+            Token token = new Token();
+            token.payload.RegisterClaim("Banaan", "Met slagroom!");
+            token.hashAlgo = new Sha256Algo();
+
+            string signedToken = signer.Sign(token, new Key("SuperSecretKey"));
+            Console.WriteLine($"Signed: { signedToken }");
+
+            // Output the claims
             Console.Write("\n");
             
             Console.WriteLine($"TokenPart: header");

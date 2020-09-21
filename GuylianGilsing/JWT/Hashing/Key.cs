@@ -2,7 +2,7 @@ using GuylianGilsing.JWT.Tokens;
 
 namespace GuylianGilsing.JWT.Hashing
 {
-    abstract class Key
+    class Key
     {
         public string secret = "YOUR_SECRET_HERE";
 

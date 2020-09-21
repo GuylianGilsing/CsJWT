@@ -18,11 +18,20 @@ namespace GuylianGilsing.JWT.Tokens
         {
             string[] tokenParts = this.SeperateTokenIntoParts(a_parsedToken);
 
+            // Construct the different token parts
             TokenPart header = new TokenPart();
             TokenPart payload = new TokenPart();
 
             this.header = this.ParseClaimsFromString(tokenParts[0], header);
             this.payload = this.ParseClaimsFromString(tokenParts[1], payload);
+        }
+
+        public Token()
+        {
+            this.header = new TokenPart();
+            this.payload = new TokenPart();
+
+            this.header.RegisterClaim("typ", "JWT");
         }
 
         public Token(TokenPart a_header, TokenPart a_payload)
