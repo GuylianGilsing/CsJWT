@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using System.Text.Json;
 using System.Collections.Generic;
 
@@ -7,7 +6,7 @@ using GuylianGilsing.JWT.Hashing;
 
 namespace GuylianGilsing.JWT.Tokens
 {
-    abstract class Token
+    class Token
     {
         public TokenPart header;
         public TokenPart payload;
@@ -39,19 +38,16 @@ namespace GuylianGilsing.JWT.Tokens
 
         private TokenPart ParseClaimsFromString(string a_claimJson, TokenPart a_tokenPart)
         {
-            // Convert the header from base64 into a byte array
-            byte[] jsonBytes = Convert.FromBase64String(a_claimJson);
-            
-            // Turn the byte array into a string
-            string claimJson = ASCIIEncoding.ASCII.GetString(jsonBytes);
+            string claimJson = Tools.Base64Decode(a_claimJson);
+            Console.WriteLine(claimJson);
 
             // Add the claims to the given TokenPart
-            Dictionary<string, string> claims = JsonSerializer.Deserialize<Dictionary<string, string>>(claimJson);
+            Dictionary<string, dynamic> claims = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(claimJson);
             if(claims.Keys.Count > 0)
             {
-                foreach(KeyValuePair<string, string> entry in claims)
+                foreach(KeyValuePair<string, dynamic> entry in claims)
                 {
-                    a_tokenPart.RegisterClaim(entry.Key, entry.Value);
+                    a_tokenPart.RegisterClaim(entry.Key, Convert.ToString(entry.Value));
                 }
             }
 
