@@ -13,9 +13,12 @@ namespace GuylianGilsing.JWT.Verification.Procedures
             string oldSignature = a_token.signature;
 
             // Create a new JWT and check if the signatures match
-            Token newlyHashedToken = a_token.hashAlgo.Hash(a_token, a_token.secretKey);
-            if(newlyHashedToken.signature == oldSignature)
-                executedSuccessfully = true;
+            if(a_token.hashAlgo != null)
+            {
+                Token newlyHashedToken = a_token.hashAlgo.Hash(a_token, a_token.secretKey);
+                if(newlyHashedToken.signature == oldSignature)
+                    executedSuccessfully = true;
+            }
 
             return executedSuccessfully;
         }

@@ -9,11 +9,11 @@ namespace GuylianGilsing.JWT.Tokens
     class Token
     {
         public Key secretKey = null;
-        public TokenPart header;
-        public TokenPart payload;
-        public string signature;
+        public TokenPart header = null;
+        public TokenPart payload = null;
+        public string signature = "";
 
-        public HashAlgo hashAlgo;
+        public HashAlgo hashAlgo = null;
 
         public Token(string a_parsedToken)
         {

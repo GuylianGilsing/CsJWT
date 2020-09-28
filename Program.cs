@@ -19,13 +19,15 @@ namespace CsJWT
 
             // long expirationTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 10;
 
-            // Token token = new Token();
-            // token.payload.RegisterClaim("Banaan", "Met slagroom!");
+            Token token = new Token();
+            token.payload.RegisterClaim("Banaan", "Met slagroom!");
             // token.payload.RegisterClaim("exp", Convert.ToString(expirationTime));
-            // token.hashAlgo = new Sha256Algo();
+            token.hashAlgo = new Sha256Algo();
 
-            // string signedToken = signer.Sign(token, validKey);
-            // Console.WriteLine($"Signed: { signedToken }");
+            string signedToken = signer.Sign(token, validKey);
+            Console.WriteLine($"Signed: { signedToken }");
+
+            Console.ReadLine();
 
             TokenVerifier verifier = new TokenVerifier();
             verifier.RegisterProcedure(new VerifyTokenHashProcedure());
@@ -33,7 +35,7 @@ namespace CsJWT
 
             // Token tokenWithValidSecret = new Token(signedToken);
             Token tokenWithValidSecret = new Token("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJCYW5hYW4iOiJNZXQgc2xhZ3Jvb20hIiwiZXhwIjoiMTYwMTI4NTIyNyJ9.NzcyMzYyMzkyMzE5ODM2MjQ1MTk3MTU5MjM2MTUyNTU4MDEyMzE3MzI4MjAxMTAxMjA4MTQyMTIxNDI0MjY0MTg1MTI4MjQ3MzEyMTY0ODU5MjI1");
-            tokenWithValidSecret.secretKey = validKey;
+            // tokenWithValidSecret.secretKey = validKey;
             tokenWithValidSecret.hashAlgo = new Sha256Algo();
 
             Console.WriteLine(verifier.IsValid(tokenWithValidSecret));
