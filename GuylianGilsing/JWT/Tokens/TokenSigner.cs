@@ -11,7 +11,7 @@ namespace GuylianGilsing.JWT.Tokens
             string header = Tools.Base64Encode(hashedToken.header.ToJson());
             string payload = Tools.Base64Encode(hashedToken.payload.ToJson());
 
-            return $"{ header }.{ payload }.{ Tools.Base64Encode(hashedToken.signature) }";
+            return $"{ header }.{ payload }.{ hashedToken.signature }";
         }
     }
 }

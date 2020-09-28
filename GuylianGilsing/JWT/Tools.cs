@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using Microsoft.IdentityModel.Tokens;
+
+using GuylianGilsing.JWT.Verification.Procedures;
 
 namespace GuylianGilsing.JWT
 {
@@ -12,6 +15,15 @@ namespace GuylianGilsing.JWT
         public static string Base64Decode(string a_textToDecode)
         {
             return Base64UrlEncoder.Decode(a_textToDecode);
+        }
+
+        public static List<VerifyProcedure> GetStandardVerifyProcedures()
+        {
+            List<VerifyProcedure> procedures = new List<VerifyProcedure>();
+            
+            // Add procedures here...
+            
+            return procedures;
         }
     }
 }

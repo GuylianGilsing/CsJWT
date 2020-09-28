@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Security.Cryptography;
 
@@ -18,17 +19,27 @@ namespace GuylianGilsing.JWT.Hashing.Algorithms
         /// </param>
         public override Token Hash(Token a_token, Key a_key)
         {
-            SHA256 sha256Algo = SHA256.Create();
+            HMACSHA256 sha256Algo;
+            
+            if(a_key != null)
+            {
+                byte[] keyBytes = UTF8Encoding.UTF8.GetBytes(a_key.secret);
+                sha256Algo = new HMACSHA256(keyBytes);
+            }
+            else
+            {
+                sha256Algo = new HMACSHA256();
+            }
 
             // Register the alg claim with the given token
-            a_token.header.RegisterClaim("alg", "SHA256");
+            a_token.header.RegisterClaim("alg", "HS256");
 
             // Construct the header and payload parts of the token
             string partialToken = $"{ a_token.header.ToString() }.{ a_token.payload.ToString() }";
 
             // Hash the partial token + add a salt to make it impossible for any lookup/rainbow tables
             // to crack the hash
-            byte[] hashedBytes = sha256Algo.ComputeHash(Encoding.UTF8.GetBytes(partialToken + a_key.secret));
+            byte[] hashedBytes = sha256Algo.ComputeHash(Encoding.UTF8.GetBytes(partialToken));
 
             // Construct the signature string from the hashed bytes
             StringBuilder stringBuilder = new StringBuilder();
@@ -38,7 +49,7 @@ namespace GuylianGilsing.JWT.Hashing.Algorithms
             }
 
             // Update the signature of the given token object
-            string signature = stringBuilder.ToString();
+            string signature = Tools.Base64Encode(stringBuilder.ToString());
             a_token.signature = signature;
 
             return a_token;

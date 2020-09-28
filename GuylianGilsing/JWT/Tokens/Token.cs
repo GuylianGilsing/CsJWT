@@ -8,6 +8,7 @@ namespace GuylianGilsing.JWT.Tokens
 {
     class Token
     {
+        public Key secretKey = null;
         public TokenPart header;
         public TokenPart payload;
         public string signature;
@@ -24,6 +25,7 @@ namespace GuylianGilsing.JWT.Tokens
 
             this.header = this.ParseClaimsFromString(tokenParts[0], header);
             this.payload = this.ParseClaimsFromString(tokenParts[1], payload);
+            this.signature = tokenParts[2];
         }
 
         public Token()
@@ -48,7 +50,6 @@ namespace GuylianGilsing.JWT.Tokens
         private TokenPart ParseClaimsFromString(string a_claimJson, TokenPart a_tokenPart)
         {
             string claimJson = Tools.Base64Decode(a_claimJson);
-            Console.WriteLine(claimJson);
 
             // Add the claims to the given TokenPart
             Dictionary<string, dynamic> claims = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(claimJson);
