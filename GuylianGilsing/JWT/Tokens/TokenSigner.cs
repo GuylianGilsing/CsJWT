@@ -4,6 +4,9 @@ namespace GuylianGilsing.JWT.Tokens
 {
     class TokenSigner : ITokenSigner
     {
+        /// <summary>
+        /// Signs a token with a seperate key
+        /// </summary>
         public string Sign(Token a_token, Key a_key)
         {
             string signedToken = "";
@@ -19,6 +22,14 @@ namespace GuylianGilsing.JWT.Tokens
             }
 
             return signedToken;
+        }
+
+        /// <summary>
+        /// Signs a token with a key
+        /// </summary>
+        public string Sign(Token a_token)
+        {
+            return this.Sign(a_token, a_token.secretKey);
         }
     }
 }

@@ -13,48 +13,94 @@ namespace CsJWT
     {
         static void Main(string[] args)
         {
-            TokenSigner signer = new TokenSigner();
-            Key validKey = new Key("SuperSecretKey");
-            Key inValidKey = new Key("Banaan");
-
-            // long expirationTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 10;
-
+            // Create a new token
             Token token = new Token();
-            token.payload.RegisterClaim("Banaan", "Met slagroom!");
-            // token.payload.RegisterClaim("exp", Convert.ToString(expirationTime));
+
+            // Register payload claims
+            token.payload.RegisterClaim("iss", "https://example.com");
+
+            // Set the hashing algorithm
             token.hashAlgo = new Sha256Algo();
 
-            string signedToken = signer.Sign(token, validKey);
-            Console.WriteLine($"Signed: { signedToken }");
+            // Set the secret key
+            token.secretKey = new Key("MyKey");
+
+            // Sign the token
+            TokenSigner signer = new TokenSigner();
+            string signedToken = signer.Sign(token);
+
+            Console.WriteLine(signedToken);
 
             Console.ReadLine();
+        }
 
+        private static void CreateMostBasicTokenSnippet()
+        {
+            // using GuylianGilsing.JWT.Tokens;
+            // using GuylianGilsing.JWT.Hashing;
+            // using GuylianGilsing.JWT.Hashing.Algorithms;
+
+            // Create a new token
+            Token token = new Token();
+
+            // Register payload claims
+            token.payload.RegisterClaim("iss", "https://example.com");
+            token.payload.RegisterClaim("sub", "code_snippet");
+            token.payload.RegisterClaim("aud", "github");
+
+            // Set the hashing algorithm
+            token.hashAlgo = new Sha256Algo();
+
+            // Set the secret key
+            token.secretKey = new Key("MySuperSecretKey");
+
+            // Sign the token
+            TokenSigner signer = new TokenSigner();
+            string signedToken = signer.Sign(token);
+
+            // Sign the token with a seperate key
+            string otherSignedToken = signer.Sign(token, new Key("OtherKey"));
+        }
+
+        private static void ClaimsSnippet()
+        {
+            // using GuylianGilsing.JWT.Tokens;
+
+            // Create a new tokenpart (header / payload)
+            TokenPart tokenPart = new TokenPart();
+
+            // Register a claim
+            tokenPart.RegisterClaim("test", "My Claim");
+
+            // Retrieve a registered claim
+            tokenPart.GetClaim("test");
+
+            // Unregister a claim
+            tokenPart.UnregisterClaim("test");
+
+            // Retrieves the JSON version of the token part
+            tokenPart.ToJson();
+        }
+
+        private static void VerifyTokenSnippet()
+        {
+            // using GuylianGilsing.JWT.Tokens;
+            // using GuylianGilsing.JWT.Verification;
+            // using GuylianGilsing.JWT.Verification.Procedures;
+
+            // Construct a verifiable token
+            Token token = new Token("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2V4YW1wbGUuY29tIn0.MTM4MTYwMjA2OTEyMDA4NzE5NzkzMDgyMjEyNzk5NjE0MDczMTA0MTQ2MTcwMjU1MTE5MjM0MjE3MTI1MjE1MjQ5NDc3NzE3NzE5ODUyMzgyNDc");
+            token.secretKey = new Key("MySuperSecretKey");
+            token.hashAlgo = new Sha256Algo();
+
+            // Create a new token verifier
             TokenVerifier verifier = new TokenVerifier();
+
+            // Register procedures
             verifier.RegisterProcedure(new VerifyTokenHashProcedure());
-            verifier.RegisterProcedure(new VerifyTokenTimeoutProcedure());
 
-            // Token tokenWithValidSecret = new Token(signedToken);
-            Token tokenWithValidSecret = new Token("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJCYW5hYW4iOiJNZXQgc2xhZ3Jvb20hIiwiZXhwIjoiMTYwMTI4NTIyNyJ9.NzcyMzYyMzkyMzE5ODM2MjQ1MTk3MTU5MjM2MTUyNTU4MDEyMzE3MzI4MjAxMTAxMjA4MTQyMTIxNDI0MjY0MTg1MTI4MjQ3MzEyMTY0ODU5MjI1");
-            // tokenWithValidSecret.secretKey = validKey;
-            tokenWithValidSecret.hashAlgo = new Sha256Algo();
-
-            Console.WriteLine(verifier.IsValid(tokenWithValidSecret));
-
-            // // Output the claims
-            // Console.Write("\n");
-            
-            // Console.WriteLine($"TokenPart: header");
-            // Console.WriteLine($"ALG - { token.header.GetClaim("alg") }");
-            // Console.WriteLine($"TYP - { token.header.GetClaim("typ") }");
-            
-            // Console.Write("\n");
-
-            // Console.WriteLine($"TokenPart: payload");
-            // Console.WriteLine($"SUB - { token.payload.GetClaim("sub") }");
-            // Console.WriteLine($"name - { token.payload.GetClaim("name") }");
-            // Console.WriteLine($"IAT - { token.payload.GetClaim("iat") }");
-
-            Console.ReadLine();
+            // Verify the token
+            verifier.IsValid(token);
         }
     }
 }
